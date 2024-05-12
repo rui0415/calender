@@ -3,17 +3,18 @@ import React, { useState } from "react";
 import { createClient } from "../../utils/supabase/client";
 import Calendar from "./ui/Calender/Calender";
 import Loading from "./loading";
-import { redirect } from "next/navigation";
-import { signout } from "./auth/signout/route";
+import { redirect, useRouter } from "next/navigation";
+import {signout} from "./auth/signout/action";
 
 export default async function Home(){
     const [loading, setLoading] = useState(true);
 
     const supabase = createClient();
-
+    const router = useRouter();
     const { data, error } = await supabase.auth.getUser()
     if (error || !data?.user) {
-      redirect('/signin')
+      console.error(error);
+      router.push('/signin');
     }
 
     return (
