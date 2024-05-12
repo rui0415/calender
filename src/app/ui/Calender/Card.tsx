@@ -16,20 +16,15 @@ const ToolTip = (props:{day:number, weekday:number, user:User | null}) => {
     let classname;
     const supabase = createClient()
     const [loading, setLoading] = useState(true)
-    const [fullname, setFullname] = useState<string | null>(null)
-    const [username, setUsername] = useState<string | null>(null)
-    const [website, setWebsite] = useState<string | null>(null)
-    const [avatar_url, setAvatarUrl] = useState<string | null>(null)
   
     const getProfile = useCallback(async () => {
         try {
           setLoading(true)
     
           const { data, error, status } = await supabase
-            .from('profiles')
-            .select(`full_name, username, website, avatar_url`)
-            .eq('id', props.user?.id)
-            .single()
+            .from('schedule')
+            .select('*')
+            .eq('user_id', props.user?.id)
     
           if (error && status !== 406) {
             console.log(error)
@@ -37,10 +32,11 @@ const ToolTip = (props:{day:number, weekday:number, user:User | null}) => {
           }
     
           if (data) {
-            setFullname(data.full_name)
-            setUsername(data.username)
-            setWebsite(data.website)
-            setAvatarUrl(data.avatar_url)
+            console.log(data)
+            // setFullname(data.full_name)
+            // setUsername(data.username)
+            // setWebsite(data.website)
+            // setAvatarUrl(data.avatar_url)
           }
         } catch (error) {
           alert('Error loading user data!')
@@ -53,6 +49,36 @@ const ToolTip = (props:{day:number, weekday:number, user:User | null}) => {
         getProfile()
       }, [props.user, getProfile])
     
+    //   async function updateProfile({
+    //     username,
+    //     website,
+    //     avatar_url,
+    //   }: {
+    //     username: string | null
+    //     fullname: string | null
+    //     website: string | null
+    //     avatar_url: string | null
+    //   }) {
+    //     try {
+    //       setLoading(true)
+    
+    //       const { error } = await supabase.from('profiles').upsert({
+    //         id: props.user?.id as string,
+    //         full_name: fullname,
+    //         username,
+    //         website,
+    //         avatar_url,
+    //         updated_at: new Date().toISOString(),
+    //       })
+    //       if (error) throw error
+    //       alert('Profile updated!')
+    //     } catch (error) {
+    //       alert('Error updating the data!')
+    //     } finally {
+    //       setLoading(false)
+    //     }
+    //   }
+
     switch (props.weekday) {
         case 0:
             classname = "translate-x-20";
@@ -87,10 +113,6 @@ const ToolTip = (props:{day:number, weekday:number, user:User | null}) => {
             </span>
             <div className='whitespace-normal '>
                 <p>{loading}</p>
-                <p>{fullname}</p>
-                <p>{username}</p>
-                <p>{website}</p>
-                <p>{avatar_url}</p>
             </div>
         </div>
     )

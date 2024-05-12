@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import Card from './Card';
 import { GrCaretPrevious, GrCaretNext } from "react-icons/gr";
 import { TbPlayerTrackPrev, TbPlayerTrackNext } from "react-icons/tb";
-import { type User } from '@supabase/supabase-js'
+import { createClient } from '../../../../utils/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 const daysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
 const dayOfWeek = (year: number, month: number, day: number) => new Date(year, month, day).getDay();
@@ -31,11 +32,16 @@ const weekColorMap: { [key in Week]: string } = {
 
 const weekDays: Week[] = [Week.Sunday, Week.Monday, Week.Tuesday, Week.Wednesday, Week.Thursday, Week.Friday, Week.Saturday];
 
-const Calendar = ({user}:{user:User | null}) => {
+const Calendar = (user :{user:User|null}) => {
+    // const supabase = createClient()
+    // const { data, error } = await supabase.auth.getUser()
+    // if (error || !data?.user) {
+    //     console.error(error)
+    // } 
+
     const now = new Date();
     const [year, setYear] = useState(now.getFullYear());
     const [month, setMonth] = useState(now.getMonth());
-
     const numDays = daysInMonth(year, month);
     const firstDayOfWeek = dayOfWeek(year, month, 1);
 
@@ -48,7 +54,7 @@ const Calendar = ({user}:{user:User | null}) => {
     for (let day = 1; day <= numDays; day++) {
         const weekDayIndex = dayOfWeek(year, month, day);
         const isToday = day === now.getDate() && month === now.getMonth() && year === now.getFullYear();
-        days.push(<Card key={day} day={day} weekday={weekDayIndex} todayFlag={isToday ? true : false } user={user} />);
+        days.push(<Card key={day} day={day} weekday={weekDayIndex} todayFlag={isToday ? true : false } user={user.user} />);
     }
 
     const prevMonth = () => {
