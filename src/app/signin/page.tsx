@@ -18,12 +18,22 @@ export default function Login() {
     return url
   }
   return (
-    <div>
+    <div className="flex justify-center border-2 border-gray-400 bg-gray-600 font-bold rounded-3xl mx-96 py-4">
       <Auth
         supabaseClient={supabase}
-        providers={["github"]}
-        appearance={{theme:ThemeSupa}}
+        providers={["google", "github"]}
+        appearance={{
+          theme:ThemeSupa,
+          variables:{
+            default: {
+              colors: {
+                brand: 'green',
+                brandAccent: 'lightgreen',
+              }
+            }
+          }}}
         redirectTo={getURL()}
+        theme="dark"
       />
     </div>
   )
